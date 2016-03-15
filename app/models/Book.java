@@ -8,7 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by rohan on 13/03/16.
@@ -93,17 +95,17 @@ public class Book extends Model {
         return expressionList;
     }
 
-    public static List page(String isbn, String author, int page, int pageSize) {
+    public static Map page(String isbn, String author, int page, int pageSize) {
+        Map result = new HashMap();
         ExpressionList<Book> expressionList = Book.find.where();
         expressionList = applyFilters(expressionList, isbn, author);
-        int count  = expressionList.findRowCount();
+        int totalCount  = expressionList.findRowCount();
         List<Book> list = expressionList
                 .findPagedList(page, pageSize)
                 .getList();
-        List resultList = new ArrayList<>();
-        resultList.add(0, list);
-        resultList.add(1, count);
-        return resultList;
+        result.put("books", list);
+        result.put("totalCount", totalCount);
+        return result;
     }
 
 

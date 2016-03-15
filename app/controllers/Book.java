@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Constant;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -7,6 +8,9 @@ import views.html.homepage;
 import views.html.newBook;
 import views.html.edit;
 import java.util.List;
+import java.util.Map;
+
+
 import static utils.PaginationHandler.*;
 
 /**
@@ -23,11 +27,11 @@ public class Book extends Controller {
         String isbn = extractString(request().getQueryString("isbn"));
         String page = request().getQueryString("pageID");
         int pageId = stringToPageId(request().getQueryString("pageId"));
-        int pageSize = 2;
-        List result =  models.Book.page(isbn, author, pageId, pageSize);
-        List<models.Book> books = (List<models.Book>) result.get(0);
-        int totalCount = (int) result.get(1);
-        return ok(homepage.render(books, isbn, author, pageCount(totalCount, pageSize), pageId+1));
+        Map result = models.Book.page(isbn, author, pageId, Constant.PAGESIZE);
+        System.out.println(Constant.PAGESIZE);
+        List<models.Book> books = (List<models.Book>) result.get("books");
+        int totalCount = (int) result.get("totalCount");
+        return ok(homepage.render(books, isbn, author, pageCount(totalCount, Constant.PAGESIZE), pageId+1));
     }
 
     public  Result newBook() {
