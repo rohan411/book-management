@@ -1,0 +1,83 @@
+@import helper._
+@(books: List[models.Book], isbn: String, author: String, pageCount: Integer, pageId: Integer)
+
+@main {
+<div class="top-container">
+    <div class="container" style="margin-top: 40px">
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-2">
+                <button type="button" class="btn btn-sm btn-primary" id="newBook">Add a Book</button>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 40px">
+        <div class="row">
+            @form(routes.Book.index()) {
+                <div class="col-sm-1 col-sm-offset-2">
+                    <h5>Filters : </h5>
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="isbn" name="isbn" value="@isbn" placeholder="Isbn">
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="author" name="author" value="@author" placeholder="author">
+                </div>
+                <div class="col-sm-1 col-sm-offset-1">
+                    <button type="submit" class="btn btn-success">Apply</button>
+                </div>
+            }
+            <div class="col-sm-1">
+                <button type="submit" class="btn btn-warning" id="clear">Clear</button>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 30px">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <table class="table table-hover">
+                    <caption align="center">Books Database</caption>
+                    <thead>
+                    <tr>
+                        <th>Isbn</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Cover</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for(book <- books) {
+                    <tr>
+                        <td>@book.getIsbn()</td>
+                        <td>@book.getTitle()</td>
+                        <td>@book.getAuthor()</td>
+                        <td>@book.getCover()</td>
+                        <td><button type="button" class="btn btn-sm btn-info" id="edit" data-id=@book.getId>Edit</button></td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2" align="center">
+                <ul class="pagination">
+                    @for(page <- 1 until (pageCount + 1)){
+                    <li id="@page"><a href="#">@page</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+    </div>
+    <script src='@routes.Assets.at("/public/javascripts", "homepage.js")'></script>
+    <script>
+        $(document).ready(function(){
+            init(@(pageId))
+        })
+   </script>
+}
+
+
+
+

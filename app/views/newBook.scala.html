@@ -1,0 +1,45 @@
+@import models.Cover;
+@(bookForm: Form[models.Book])
+
+@import helper._
+
+@main {
+    <div class="container" style="margin-top: 40px">
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-3"><h4>Create Book</h4></div>
+        <div class="col-sm-2 col-sm-offset-2">
+            <a href="@routes.Book.index()" class="btn btn-sm btn-primary" >Home</a>
+        </div>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 40px">
+        <div class="row">
+            <div class="col-sm-5 col-sm-offset-3">
+                @form(routes.Book.create()) {
+                    <div class="form-group">
+                        <label>Isbn :</label>
+                        <input type="test" class="form-control" name="isbn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Title :</label>
+                        <input type="test" class="form-control" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author :</label>
+                        <input type="test" class="form-control" name="author" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cover :</label>
+                            <select name="cover" class="selectpicker">
+                                @for(cover <- Cover.values()){
+                                    <option value="@cover.name">@cover.name()</option>
+                                }
+                            </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                }
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+    </div>
+}
