@@ -12,30 +12,33 @@
     <script id="book-form-template" type="text/x-handlebars-template">
         <div class="container" style="margin-top: 40px">
         <div class="row">
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-3">
+                    <h4> Create Book :</h4>
+                </div>
+            </div>
             <div class="col-sm-5 col-sm-offset-3">
-                @form(routes.Book.create()) {
-                    <div class="form-group">
-                        <label>Isbn :</label>
-                        <input type="test" class="form-control" id="isbn" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Title :</label>
-                        <input type="test" class="form-control" id="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Author :</label>
-                        <input type="test" class="form-control" id="author" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Cover :</label>
-                            <select id="cover" class="">
-                                @for(cover <- Cover.values()){
-                                    <option value="@cover.name">@cover.name()</option>
-                                }
-                            </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary create-book">Submit</button>
-                }
+                <div class="form-group">
+                    <label>Isbn :</label>
+                    <input type="test" class="form-control" id="isbn" required>
+                </div>
+                <div class="form-group">
+                    <label>Title :</label>
+                    <input type="test" class="form-control" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label>Author :</label>
+                    <input type="test" class="form-control" id="author" required>
+                </div>
+                <div class="form-group">
+                    <label>Cover :</label>
+                        <select id="cover" class="">
+                            @for(cover <- Cover.values()){
+                                <option value="@cover.name">@cover.name()</option>
+                            }
+                        </select>
+                </div>
+                <button type="submit" class="btn btn-primary create-book">Submit</button>
             </div>
             <div class="col-sm-3"></div>
         </div>
@@ -44,6 +47,11 @@
 
     <script id="edit-book-form-template" type="text/x-handlebars-template">
     <div class="container" style="margin-top: 40px">
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-3">
+                <h4> Edit Book :</h4>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-5 col-sm-offset-3">
                 <div class="form-group">
@@ -129,7 +137,7 @@
                             <td>{{ title }}</td>
                             <td>{{ author }}</td>
                             <td>{{ cover }}</td>
-                            <td><button type="button" class="btn btn-sm btn-info" id="edit" data-id="{{id}}">Edit</button></td>
+                            <td><button type="button" class="btn btn-sm btn-info edit" data-id="{{id}}">Edit</button></td>
                         </tr>
                         {{/each}}
                         </tbody>

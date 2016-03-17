@@ -2,10 +2,10 @@ function renderEditBookForm(url) {
       $.ajax({
          url: url
        })
-     .done(function( book ) {
+     .done(function( data ) {
         var source = $("#edit-book-form-template").html();
         var template = Handlebars.compile(source);
-        $("#hd").html(template({book: book, cover: ["Hardcover", "Softcover"]}));
+        $("#hd").html(template({book: data.payload.book, cover: ["Hardcover", "Softcover"]}));
         registerEditBook();
      });
 }
@@ -13,7 +13,6 @@ function renderEditBookForm(url) {
 function registerEditBook() {
     $( "#update-book" ).click(function(e) {
         e.preventDefault();
-        debugger
         var id = $(this).data("id");
         var book = {
             isbn: $("#isbn").val(),
@@ -28,13 +27,11 @@ function registerEditBook() {
             dataType: 'json',
             contentType: "application/json",
             success: function (response) {
-                $('.notifications').html("<div class='alert alert-success'> <strong>Success! </strong>" + response.message + "</div>");
+                $('.notifications').html("<div class='alert alert-success'> <strong>Success! </strong>" + response.meta.message + "</div>");
                 renderBooks("/books");
             },
-             error: function(response) {
-             debugger
-               alert("Status: " + response.responseJSON.message);
-               $('.notifications').html("<div class='alert alert-success'> <strong>Failure! </strong>" + response.responseJSON.message + "</div>");
+             error: function(err) {
+               $('.notifications').html("<div class='alert alert-danger'> <strong>Failure! </strong>" + err.responseJSON.meta.message + "</div>");
                renderBooks("/books");
             }
         });
@@ -42,16 +39,16 @@ function registerEditBook() {
 
     $( "#delete-book" ).click(function(e) {
             e.preventDefault();
+            var id = $(this).data("id");
             $.ajax({
-                url: '/books/' + id + 'delete',
+                url: '/books/' + id + '/delete',
                 type: 'post',
                 success: function (response) {
-                    $('.notifications').html("<div class='alert alert-success'> <strong>Success! </strong>" + response.message + "</div>");
+                    $('.notifications').html("<div class='alert alert-success'> <strong>Success! </strong>" + response.meta.message + "</div>");
                     renderBooks("/books");
                 },
-                 error: function(response) {
-                   alert("Status: " + response.responseJSON.message);
-                   $('.notifications').html("<div class='alert alert-success'> <strong>Failure! </strong>" + response.responseJSON.message + "</div>");
+                 error: function(err) {
+                   $('.notifications').html("<div class='alert alert-danger'> <strong>Failure! </strong>" + err.responseJSON.meta.message + "</div>");
                    renderBooks("/books");
                 }
             });

@@ -1,19 +1,14 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Constant;
-import play.api.libs.json.Json;
-import play.data.Form;
-import play.mvc.BodyParser;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.BookSerializer;
 import views.html.homepage;
-import views.html.newBook;
-import views.html.edit;
+
 import java.util.List;
 import java.util.Map;
 
@@ -41,51 +36,62 @@ public class Book extends Controller {
         Map result = models.Book.page(isbn, author, pageId, Constant.PAGESIZE);
         List<models.Book> books = (List<models.Book>) result.get("books");
         int totalCount = (int) result.get("totalCount");
-        ObjectNode response = BookSerializer.getJsonNodes(author, isbn, pageId, books, totalCount);
+        ObjectNode response = BookSerializer.generateResponse(author, isbn, pageId, books, totalCount);
         return ok(response);
     }
 
     public  Result create() {
         ObjectNode response = play.libs.Json.newObject();
+        ObjectNode metaRespone = play.libs.Json.newObject();
         try {
             JsonNode json = request().body().asJson();
             models.Book book = play.libs.Json.fromJson(json, models.Book.class);
             book.save();
-            response.put("message", "Book created");
-            return ok(response);
+            metaRespone.put("message", "Book created");
+            return ok(BookSerializer.generateResponse(response, metaRespone));
         }
         catch (Exception ex) {
-            ex.printStackTrace();
-            response.put("message", "Cannot create book : " + ex.getMessage());
-            return badRequest(response);
+            metaRespone.put("message", "Cannot create book : " + ex.getMessage());
+            return badRequest(BookSerializer.generateResponse(response, metaRespone));
         }
     }
 
     public  Result edit(String id) {
+        ObjectNode response = play.libs.Json.newObject();
+        ObjectNode metaRespone = play.libs.Json.newObject();
         models.Book book = models.Book.find.byId(id);
-        return ok(play.libs.Json.toJson(book));
+        response.put("book", Json.toJson(book));
+        return ok(BookSerializer.generateResponse(response, metaRespone));
     }
 
     public  Result update(String id) {
         ObjectNode response = play.libs.Json.newObject();
+        ObjectNode metaRespone = play.libs.Json.newObject();
         JsonNode json = request().body().asJson();
         models.Book updatedBook = play.libs.Json.fromJson(json, models.Book.class);
         models.Book bookDb = models.Book.find.byId(id);
         if(bookDb != null) {
-            updatedBook.setId(id);
-            updatedBook.update();
-            response.put("message", "Book " + updatedBook.title + " has been updated");
-            return ok(response);
+            try {
+                updatedBook.setId(id);
+                updatedBook.update();
+                metaRespone.put("message", "Book " + updatedBook.title + " has been updated");
+                return ok(BookSerializer.generateResponse(response, metaRespone));
+            }
+            catch (Exception ex) {
+                metaRespone.put("message", "Cannot create book : " + ex.getMessage());
+                return badRequest(BookSerializer.generateResponse(response, metaRespone));
+            }
         } else {
-            response.put("message", "Incorrect Id");
-            return badRequest(response);
+            metaRespone.put("message", "Incorrect Id");
+            return badRequest(BookSerializer.generateResponse(response, metaRespone));
         }
     }
 
     public  Result delete(String id) {
         ObjectNode response = play.libs.Json.newObject();
+        ObjectNode metaRespone = play.libs.Json.newObject();
         models.Book.find.ref(id).delete();
-        response.put("message", "Book deleted");
-        return ok(response);
+        metaRespone.put("message", "Book deleted");
+        return ok(BookSerializer.generateResponse(response, metaRespone));
     }
 }

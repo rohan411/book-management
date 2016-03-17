@@ -21,12 +21,11 @@ function registerWithCreateBook() {
             dataType: 'json',
             contentType: "application/json",
             success: function (response) {
-                $('.notifications').html("<div class='alert alert-success'> <strong>Success! </strong>" + response.message + "</div>");
+                $('.notifications').html("<div class='alert alert-success'> <strong>Success! </strong>" + response.meta.message + "</div>");
                 renderBooks("/books");
             },
-             error: function(response) {
-               alert("Status: " + response.responseJSON.message);
-               $('.notifications').html("<div class='alert alert-success'> <strong>Failure! </strong>" + response.responseJSON.message + "</div>");
+             error: function(err) {
+               $('.notifications').html("<div class='alert alert-danger'> <strong>Failure! </strong>" + err.responseJSON.meta.message + "</div>");
                renderCreateBookForm();
             }
         });

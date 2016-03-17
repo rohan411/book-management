@@ -23,6 +23,13 @@ public class BookSerializer {
         return response;
     }
 
+    public static ObjectNode generateResponse(ObjectNode payload, ObjectNode meta) {
+        ObjectNode responseBody = play.libs.Json.newObject();
+        responseBody.put("payload", payload);
+        responseBody.put("meta", meta);
+        return responseBody;
+    }
+
     private static ObjectNode generateFilter(String author, String isbn) {
         ObjectNode response = play.libs.Json.newObject();
         response.put("isbn", isbn);
@@ -30,7 +37,7 @@ public class BookSerializer {
         return response;
     }
 
-    public static ObjectNode getJsonNodes(String author, String isbn, int pageId, List<models.Book> books, int totalCount) {
+    public static ObjectNode generateResponse(String author, String isbn, int pageId, List<models.Book> books, int totalCount) {
 
         ObjectNode response = play.libs.Json.newObject();
         ObjectNode responseBody = play.libs.Json.newObject();

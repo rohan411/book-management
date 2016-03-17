@@ -32,7 +32,7 @@ function init(pageId){
 }
 
 function registerWithEditBook() {
-    $( "#edit" ).click(function() {
+    $( ".edit" ).click(function() {
       var id = $(this).data("id")
       var url = "/books/" + id + "/edit";
       renderEditBookForm(url);
