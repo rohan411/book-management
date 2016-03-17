@@ -5,10 +5,9 @@
 # Home page
 
 GET     /                                 controllers.Book.homePageRedirect()
+GET     /home                             controllers.Book.home()
 POST    /books/create                     controllers.Book.create()
 GET     /books                            controllers.Book.index()
-#GET    /books.json                       controllers.Book.json()
-GET     /books/new                        controllers.Book.newBook()
 GET     /books/:id/edit                   controllers.Book.edit(id: String)
 POST    /books/:id/update                 controllers.Book.update(id: String)
 POST    /books/:id/delete                 controllers.Book.delete(id: String)

@@ -1,81 +1,154 @@
 @import helper._
-@(books: List[models.Book], isbn: String, author: String, pageCount: Integer, pageId: Integer)
 
 @main {
-<div class="top-container">
-    <div class="container" style="margin-top: 40px">
+    <div id="hd">
+    </div>
+    <script>
+        $(document).ready(function(){
+            renderBooks("@routes.Book.index()");
+        })
+   </script>
+
+    <script id="book-form-template" type="text/x-handlebars-template">
+        <div class="container" style="margin-top: 40px">
         <div class="row">
-            <div class="col-sm-2 col-sm-offset-2">
-                <button type="button" class="btn btn-sm btn-primary" id="newBook">Add a Book</button>
+            <div class="col-sm-5 col-sm-offset-3">
+                @form(routes.Book.create()) {
+                    <div class="form-group">
+                        <label>Isbn :</label>
+                        <input type="test" class="form-control" id="isbn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Title :</label>
+                        <input type="test" class="form-control" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author :</label>
+                        <input type="test" class="form-control" id="author" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cover :</label>
+                            <select id="cover" class="">
+                                @for(cover <- Cover.values()){
+                                    <option value="@cover.name">@cover.name()</option>
+                                }
+                            </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary create-book">Submit</button>
+                }
             </div>
+            <div class="col-sm-3"></div>
         </div>
     </div>
+    </script>
+
+    <script id="edit-book-form-template" type="text/x-handlebars-template">
     <div class="container" style="margin-top: 40px">
         <div class="row">
-            @form(routes.Book.index()) {
+            <div class="col-sm-5 col-sm-offset-3">
+                <div class="form-group">
+                    <label>Isbn :</label>
+                    <input type="test" class="form-control" id="isbn" value="{{ book.isbn }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Title :</label>
+                    <input type="test" class="form-control" id="title" value="{{ book.title }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Author :</label>
+                    <input type="test" class="form-control" id="author" value="{{ book.author }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Cover :</label>
+                    <select name="cover" id="cover" class="">
+                        {{#each cover}}
+                            {{#ifCond book.cover '==' this }}
+                            <option selected value="{{this}}">{{this}}</option>
+                            {{/ifCond}}
+                            {{#ifCond book.cover '!=' this}}
+                            <option value="{{this}}">{{this}}</option>
+                            {{/ifCond}}
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="col-sm-2"><button type="submit" class="btn btn-success" id="update-book" data-id="{{book.id}}">Update</button></div>
+                <div class="col-sm-2">
+                    <div clas="col-sm-2"><button type="submit" class="btn btn-danger" id="delete-book" data-id="{{book.id}}">Delete</button></div>
+                </div>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+    </div>
+</script>
+
+    <script id="home-page-template" type="text/x-handlebars-template">
+        <div class="container" style="margin-top: 40px">
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-2">
+                    <button type="button" class="btn btn-sm btn-primary" id="newBook">Add a Book</button>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin-top: 40px">
+            <div class="row">
+                @form(routes.Book.index()) {
                 <div class="col-sm-1 col-sm-offset-2">
                     <h5>Filters : </h5>
                 </div>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="isbn" name="isbn" value="@isbn" placeholder="Isbn">
+                    <input type="text" class="form-control" id="isbn" name="isbn" value="{{payload.filters.isbn}}" placeholder="Isbn">
                 </div>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="author" name="author" value="@author" placeholder="author">
+                    <input type="text" class="form-control" id="author" name="author" value="{{payload.filters.author}}" placeholder="Author">
                 </div>
                 <div class="col-sm-1 col-sm-offset-1">
-                    <button type="submit" class="btn btn-success">Apply</button>
+                    <button type="submit" class="btn btn-success" id="apply-filter">Apply</button>
                 </div>
-            }
-            <div class="col-sm-1">
-                <button type="submit" class="btn btn-warning" id="clear">Clear</button>
+                }
+                <div class="col-sm-1">
+                    <button type="submit" class="btn btn-warning" id="clear">Clear</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 30px">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                    <table class="table table-hover">
+                        <caption align="center">Books Database</caption>
+                        <thead>
+                        <tr>
+                            <th>Isbn</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Cover</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each payload.books}}
+                        <tr>
+                            <td>{{ isbn }}</td>
+                            <td>{{ title }}</td>
+                            <td>{{ author }}</td>
+                            <td>{{ cover }}</td>
+                            <td><button type="button" class="btn btn-sm btn-info" id="edit" data-id="{{id}}">Edit</button></td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2" align="center">
+                    <ul class="pagination">
+                        {{#times meta.pageCount}}
+                            <li id="{{this}}"><a href="#">{{this}}</a></li>
+                        {{/times}}
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="row" style="margin-top: 30px">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
-                <table class="table table-hover">
-                    <caption align="center">Books Database</caption>
-                    <thead>
-                    <tr>
-                        <th>Isbn</th>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Cover</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for(book <- books) {
-                    <tr>
-                        <td>@book.getIsbn()</td>
-                        <td>@book.getTitle()</td>
-                        <td>@book.getAuthor()</td>
-                        <td>@book.getCover()</td>
-                        <td><button type="button" class="btn btn-sm btn-info" id="edit" data-id=@book.getId>Edit</button></td>
-                    </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-sm-2"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2" align="center">
-                <ul class="pagination">
-                    @for(page <- 1 until (pageCount + 1)){
-                    <li id="@page"><a href="#">@page</a></li>
-                    }
-                </ul>
-            </div>
-            <div class="col-sm-2"></div>
-        </div>
-    </div>
-    </div>
-    <script src='@routes.Assets.at("/public/javascripts", "homepage.js")'></script>
-    <script>
-        $(document).ready(function(){
-            init(@(pageId))
-        })
-   </script>
+    </script>
+
 }
 
 

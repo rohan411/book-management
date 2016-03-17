@@ -6,14 +6,24 @@
     <title>Book Management</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src='@routes.Assets.at("/public/javascripts", "bootstrap.min.js")'></script>
-    <link rel="stylesheet" href='@routes.Assets.at("/public/stylesheets", "bootstrap.min.css")'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+    <script src='@routes.Assets.at("/public/javascripts", "handlebarRegisters.js")'></script>
+
+    <link rel="stylesheet" href='@routes.Assets.at("/public/stylesheets", "bootstrap.min.css")'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href='@routes.Assets.at("/public/stylesheets", "bootstrap.min.css")'>
+
+    <script src='@routes.Assets.at("/public/javascripts", "homepage.js")'></script>
+    <script src='@routes.Assets.at("/public/javascripts", "book.js")'></script>
+    <script src='@routes.Assets.at("/public/javascripts", "editBook.js")'></script>
 </head>
 <body>
+
     <div class="container">
         <div class="row">
-            <div class="col-sm-4 col-sm-offset-4">
+            <div class="col-sm-4 col-sm-offset-4 notifications">
                 @if(flash.containsKey("success")) {
                     <div class="alert alert-success">
                         <strong>Success! </strong> @flash.get("success")
