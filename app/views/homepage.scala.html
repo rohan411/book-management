@@ -70,10 +70,9 @@
                     <label>Cover :</label>
                     <select name="cover" id="cover" class="">
                         {{#each cover}}
-                            {{#ifCond book.cover '==' this }}
+                            {{#ifCond ../book.cover '==' this }}
                             <option selected value="{{this}}">{{this}}</option>
-                            {{/ifCond}}
-                            {{#ifCond book.cover '!=' this}}
+                            {{else}}
                             <option value="{{this}}">{{this}}</option>
                             {{/ifCond}}
                         {{/each}}
