@@ -60,8 +60,13 @@ public class Book extends Controller {
         ObjectNode response = play.libs.Json.newObject();
         ObjectNode metaRespone = play.libs.Json.newObject();
         models.Book book = models.Book.find.byId(id);
-        response.put("book", Json.toJson(book));
-        return ok(BookSerializer.generateResponse(response, metaRespone));
+        if (book != null) {
+            response.put("book", Json.toJson(book));
+            return ok(BookSerializer.generateResponse(response, metaRespone));
+        } else {
+            metaRespone.put("message", "Book with id : " + id + " is not in the database");
+            return notFound(BookSerializer.generateResponse(response, metaRespone));
+        }
     }
 
     public  Result update(String id) {
@@ -74,7 +79,7 @@ public class Book extends Controller {
             try {
                 updatedBook.setId(id);
                 updatedBook.update();
-                metaRespone.put("message", "Book " + updatedBook.title + " has been updated");
+                metaRespone.put("message", "Book : " + updatedBook.title + " has been updated");
                 return ok(BookSerializer.generateResponse(response, metaRespone));
             }
             catch (Exception ex) {
@@ -83,15 +88,21 @@ public class Book extends Controller {
             }
         } else {
             metaRespone.put("message", "Incorrect Id");
-            return badRequest(BookSerializer.generateResponse(response, metaRespone));
+            return notFound(BookSerializer.generateResponse(response, metaRespone));
         }
     }
 
     public  Result delete(String id) {
         ObjectNode response = play.libs.Json.newObject();
         ObjectNode metaRespone = play.libs.Json.newObject();
-        models.Book.find.ref(id).delete();
-        metaRespone.put("message", "Book deleted");
-        return ok(BookSerializer.generateResponse(response, metaRespone));
+        models.Book book = models.Book.find.byId(id);
+        if (book != null) {
+            book.delete();
+            metaRespone.put("message", "Book deleted");
+            return ok(BookSerializer.generateResponse(response, metaRespone));
+        } else {
+            metaRespone.put("message", "Book with id : " + id + " is not in the database");
+            return notFound(BookSerializer.generateResponse(response, metaRespone));
+        }
     }
 }

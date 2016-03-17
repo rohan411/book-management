@@ -15,7 +15,7 @@ function renderBooks(url) {
 function init(pageId){
     registerWithClearBook();
     registerWithNewBook();
-    registerWithEditBook()
+    registerWithEditBook();
     registerWithApplyFilters(pageId);
     $(".pagination > #" + pageId).addClass("active")
     $('a').click(function(e) {
